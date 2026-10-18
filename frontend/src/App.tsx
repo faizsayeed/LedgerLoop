@@ -194,7 +194,7 @@ export function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans text-slate-900 antialiased">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#090d16] font-sans text-slate-100 antialiased">
       {/* Left Persistent Navigation */}
       <Sidebar
         currentTab={currentTab}

@@ -300,37 +300,37 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 <div
                   key={act.id}
                   onClick={() => onNavigateTab(act.target_tab)}
-                  className="p-3 rounded-lg border border-slate-200 bg-slate-50/70 hover:bg-slate-100 hover:border-slate-300 cursor-pointer transition-all flex items-start justify-between group"
+                  className="p-3 rounded-lg border border-slate-800 bg-slate-900/90 hover:bg-slate-800 hover:border-slate-700 cursor-pointer transition-all flex items-start justify-between group"
                 >
                   <div className="space-y-1 min-w-0 pr-2">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-semibold text-slate-900 group-hover:text-teal-900 truncate">
+                      <h4 className="text-xs font-semibold text-slate-100 group-hover:text-teal-300 truncate">
                         {act.title}
                       </h4>
                       <span
-                        className={`text-[9px] font-bold px-1.5 py-0.2 rounded border uppercase shrink-0 ${
+                        className={`text-[9px] font-bold px-1.5 py-0.2 rounded border uppercase shrink-0 font-mono ${
                           act.urgency === 'Critical'
-                            ? 'bg-red-50 text-red-700 border-red-200'
+                            ? 'bg-rose-500/10 text-rose-400 border-rose-500/25'
                             : act.urgency === 'High'
-                            ? 'bg-amber-50 text-amber-700 border-amber-200'
-                            : 'bg-slate-100 text-slate-600 border-slate-200'
+                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/25'
+                            : 'bg-slate-800 text-slate-300 border-slate-700'
                         }`}
                       >
                         {act.urgency}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-500 leading-snug line-clamp-1">{act.description}</p>
+                    <p className="text-[11px] text-slate-400 leading-snug line-clamp-1">{act.description}</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 shrink-0 mt-0.5 transition-transform group-hover:translate-x-0.5" />
+                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-slate-300 shrink-0 mt-0.5 transition-transform group-hover:translate-x-0.5" />
                 </div>
               ))}
             </div>
 
-            <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-              <span className="text-slate-400">Activity audit logging active</span>
+            <div className="mt-3.5 pt-3 border-t border-slate-800 flex items-center justify-between text-[11px]">
+              <span className="text-slate-500">Activity audit logging active</span>
               <button
                 onClick={() => onNavigateTab('collections')}
-                className="font-semibold text-teal-700 hover:text-teal-900 transition-colors"
+                className="font-semibold text-teal-400 hover:text-teal-300 transition-colors"
               >
                 Open Collection Queue →
               </button>
@@ -341,38 +341,38 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
           <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
             <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
-                <Calendar className="w-4 h-4 text-emerald-700" /> Cash Inflow Horizon
+                <Calendar className="w-4 h-4 text-emerald-400" /> Cash Inflow Horizon
               </h3>
-              <span className="text-[11px] font-mono text-emerald-700 font-semibold">Calibrated Run-Rate</span>
+              <span className="text-[11px] font-mono text-emerald-400 font-semibold">Calibrated Run-Rate</span>
             </div>
 
             <div className="mt-3.5 grid grid-cols-3 gap-2 text-center">
-              <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
-                <span className="text-[10px] text-slate-500 uppercase font-semibold block">Next 7 Days</span>
-                <span className="text-sm font-bold font-mono text-slate-900 mt-0.5 block">
+              <div className="p-2.5 bg-slate-900/90 rounded-lg border border-slate-800">
+                <span className="text-[10px] text-slate-400 uppercase font-semibold block">Next 7 Days</span>
+                <span className="text-sm font-bold font-mono text-slate-100 mt-0.5 block tabular-nums">
                   {formatINR(kpis.expected_receipts_7d)}
                 </span>
-                <span className="text-[9px] text-emerald-600 font-medium mt-0.5 block">4 Invoices</span>
+                <span className="text-[9px] text-emerald-400 font-medium mt-0.5 block">4 Invoices</span>
               </div>
 
-              <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
-                <span className="text-[10px] text-slate-500 uppercase font-semibold block">8–14 Days</span>
-                <span className="text-sm font-bold font-mono text-slate-900 mt-0.5 block">
+              <div className="p-2.5 bg-slate-900/90 rounded-lg border border-slate-800">
+                <span className="text-[10px] text-slate-400 uppercase font-semibold block">8–14 Days</span>
+                <span className="text-sm font-bold font-mono text-slate-100 mt-0.5 block tabular-nums">
                   ₹3,50,000
                 </span>
-                <span className="text-[9px] text-slate-500 font-medium mt-0.5 block">Reliance &amp; Dairy</span>
+                <span className="text-[9px] text-slate-400 font-medium mt-0.5 block">Reliance &amp; Dairy</span>
               </div>
 
-              <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
-                <span className="text-[10px] text-slate-500 uppercase font-semibold block">15–30 Days</span>
-                <span className="text-sm font-bold font-mono text-slate-900 mt-0.5 block">
+              <div className="p-2.5 bg-slate-900/90 rounded-lg border border-slate-800">
+                <span className="text-[10px] text-slate-400 uppercase font-semibold block">15–30 Days</span>
+                <span className="text-sm font-bold font-mono text-slate-100 mt-0.5 block tabular-nums">
                   ₹4,25,000
                 </span>
-                <span className="text-[9px] text-slate-500 font-medium mt-0.5 block">DMart &amp; Wholesale</span>
+                <span className="text-[9px] text-slate-400 font-medium mt-0.5 block">DMart &amp; Wholesale</span>
               </div>
             </div>
 
-            <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+            <div className="mt-3 pt-2.5 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
               <span>Working capital target: <strong>68% recovered</strong></span>
               <button
                 onClick={() => onNavigateTab('forecasting')}
@@ -403,11 +403,13 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
           </div>
 
           {/* Table Filters */}
-          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 self-start sm:self-auto text-xs">
+          <div className="flex items-center bg-slate-900 p-0.5 rounded-lg border border-slate-800 self-start sm:self-auto text-xs">
             <button
               onClick={() => setTableFilter('all')}
               className={`px-2.5 py-1 rounded-md font-medium transition-all ${
-                tableFilter === 'all' ? 'bg-white text-slate-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
+                tableFilter === 'all'
+                  ? 'bg-slate-800 text-slate-100 shadow-sm font-semibold border border-slate-700/60'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               All ({priority_queue.length})
@@ -415,7 +417,9 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             <button
               onClick={() => setTableFilter('critical')}
               className={`px-2.5 py-1 rounded-md font-medium transition-all ${
-                tableFilter === 'critical' ? 'bg-white text-red-700 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
+                tableFilter === 'critical'
+                  ? 'bg-rose-950/80 text-rose-300 shadow-sm font-semibold border border-rose-800/60'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Critical &amp; High
@@ -423,7 +427,9 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             <button
               onClick={() => setTableFilter('broken')}
               className={`px-2.5 py-1 rounded-md font-medium transition-all ${
-                tableFilter === 'broken' ? 'bg-white text-amber-700 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
+                tableFilter === 'broken'
+                  ? 'bg-amber-950/80 text-amber-300 shadow-sm font-semibold border border-amber-800/60'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Broken Commitments
@@ -431,7 +437,9 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             <button
               onClick={() => setTableFilter('moderntrade')}
               className={`px-2.5 py-1 rounded-md font-medium transition-all ${
-                tableFilter === 'moderntrade' ? 'bg-white text-teal-700 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
+                tableFilter === 'moderntrade'
+                  ? 'bg-teal-950/80 text-teal-300 shadow-sm font-semibold border border-teal-800/60'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Tier-1 Retail

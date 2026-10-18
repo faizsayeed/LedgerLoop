@@ -4,24 +4,27 @@
 
 @layer base {
   :root {
-    --bg-primary: #f8fafc;
-    --bg-surface: #ffffff;
-    --border-subtle: #e2e8f0;
-    --border-strong: #cbd5e1;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
+    --bg-primary: #090d16;
+    --bg-surface: #0f172a;
+    --bg-card: #111827;
+    --bg-card-hover: #161f30;
+    --border-subtle: #1e293b;
+    --border-strong: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
     --text-muted: #64748b;
   }
 
   body {
-    background-color: var(--bg-primary);
+    background-color: #090d16;
     background-image: 
-      radial-gradient(at 0% 0%, rgba(15, 118, 110, 0.03) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.03) 0px, transparent 50%),
-      linear-gradient(to right, rgba(226, 232, 240, 0.3) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(226, 232, 240, 0.3) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
-    color: var(--text-primary);
+      radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.04) 0px, transparent 45%),
+      radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.03) 0px, transparent 45%),
+      linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+    color: #f8fafc;
+    color-scheme: dark;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -35,87 +38,221 @@
     font-feature-settings: "tnum" 1;
   }
 
-  /* Compact scrollbars */
+  /* Sleek modern dark scrollbars */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: #090d16;
   }
   ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: #1e293b;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: #334155;
   }
 }
 
-/* 3D Depth Utilities & Hardware Elevation */
-.preserve-3d {
-  transform-style: preserve-3d;
+/* ==========================================================================
+   PROFESSIONAL ENTERPRISE DARK THEME OVERRIDES
+   Replaces AI-generated light/bubble styling with high-end terminal dark mode
+   ========================================================================== */
+
+/* Main Containers & Cards */
+.bg-white {
+  background-color: #111827 !important;
+  color: #f8fafc !important;
 }
 
-.perspective-1000 {
-  perspective: 1000px;
+.bg-slate-50 {
+  background-color: #0c111d !important;
 }
 
-.perspective-1200 {
-  perspective: 1200px;
+.bg-slate-100 {
+  background-color: #161f30 !important;
 }
 
-.shadow-3d-card {
-  box-shadow: 
-    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
-    0 -1px 0 0 rgba(15, 23, 42, 0.04) inset,
-    0 2px 4px -1px rgba(15, 23, 42, 0.05),
-    0 10px 20px -3px rgba(15, 23, 42, 0.07);
+.bg-slate-200 {
+  background-color: #1e293b !important;
 }
 
-.shadow-3d-elevated {
-  box-shadow: 
-    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
-    0 -1px 0 0 rgba(15, 23, 42, 0.05) inset,
-    0 4px 8px -2px rgba(15, 23, 42, 0.08),
-    0 16px 32px -4px rgba(15, 23, 42, 0.12);
+/* Borders */
+.border-slate-100,
+.border-slate-200 {
+  border-color: #1e293b !important;
 }
 
-.shadow-3d-glow {
-  box-shadow: 
-    0 0 20px -3px rgba(20, 184, 166, 0.25),
-    0 1px 0 0 rgba(255, 255, 255, 0.95) inset;
+.border-slate-300 {
+  border-color: #334155 !important;
 }
 
-/* 3D Tactile Push Button */
-.btn-3d {
-  position: relative;
-  box-shadow: 0 3px 0 0 #0f172a, 0 4px 6px -1px rgba(15, 23, 42, 0.2);
-  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.btn-3d:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 0 #0f172a, 0 1px 2px 0 rgba(15, 23, 42, 0.1);
+/* Text Hierarchy */
+.text-slate-900,
+.text-slate-800 {
+  color: #f8fafc !important;
 }
 
+.text-slate-700,
+.text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+.text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Hover States */
+.hover\:bg-slate-50:hover {
+  background-color: #161f30 !important;
+}
+
+.hover\:bg-slate-100:hover {
+  background-color: #1e293b !important;
+}
+
+.hover\:bg-slate-200:hover {
+  background-color: #27354a !important;
+}
+
+.hover\:bg-teal-50\/30:hover,
+.hover\:bg-teal-50\/40:hover {
+  background-color: rgba(20, 184, 166, 0.08) !important;
+}
+
+/* Status Badges & Alert Strips */
+.bg-amber-50,
+.bg-amber-50\/90 {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  border-color: rgba(245, 158, 11, 0.25) !important;
+  color: #fbbf24 !important;
+}
+
+.bg-amber-100,
+.bg-amber-100\/70 {
+  background-color: rgba(245, 158, 11, 0.18) !important;
+  color: #fef3c7 !important;
+}
+
+.text-amber-800,
+.text-amber-900,
+.text-amber-950 {
+  color: #fbbf24 !important;
+}
+
+.bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.25) !important;
+  color: #f87171 !important;
+}
+
+.text-red-700,
+.text-red-800,
+.text-red-900 {
+  color: #f87171 !important;
+}
+
+.bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+  color: #34d399 !important;
+}
+
+.text-emerald-700,
+.text-emerald-800,
+.text-emerald-900 {
+  color: #34d399 !important;
+}
+
+.bg-teal-50,
+.bg-teal-50\/20 {
+  background-color: rgba(20, 184, 166, 0.08) !important;
+  border-color: rgba(20, 184, 166, 0.2) !important;
+  color: #2dd4bf !important;
+}
+
+.text-teal-700,
+.text-teal-800,
+.text-teal-900 {
+  color: #2dd4bf !important;
+}
+
+/* Table Clean Styling */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+thead {
+  background-color: #0c111d !important;
+}
+
+thead th {
+  border-bottom: 1px solid #1e293b !important;
+  color: #94a3b8 !important;
+}
+
+tbody tr {
+  border-bottom: 1px solid #161f30 !important;
+}
+
+tbody tr:hover {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+}
+
+/* Inputs, Selects & Date Pickers */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+  background-color: #0b0f19 !important;
+  border: 1px solid #1e293b !important;
+  color: #f8fafc !important;
+  border-radius: 0.375rem !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #0ea5e9 !important;
+  box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.4) !important;
+  outline: none !important;
+}
+
+/* Refined Professional Elevation */
+.card-pro {
+  background-color: #111827;
+  border: 1px solid #1e293b;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.card-pro:hover {
+  border-color: #334155;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+}
+
+/* Replace 3D Button Bevels with Professional Flat Tactile Buttons */
+.btn-3d,
 .btn-3d-teal {
   position: relative;
-  box-shadow: 0 3px 0 0 #134e4a, 0 4px 6px -1px rgba(15, 118, 110, 0.3);
-  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  transition: all 0.12s ease;
 }
+
+.btn-3d:active,
 .btn-3d-teal:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 0 #134e4a, 0 1px 2px 0 rgba(15, 118, 110, 0.15);
+  transform: translateY(1px);
 }
 
-/* 3D Glass Milled Panel Rim */
-.glass-rim-3d {
-  border-top: 1px solid rgba(255, 255, 255, 0.85);
-  border-bottom: 1px solid rgba(203, 213, 225, 0.7);
-  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
-}
-
-/* Custom utility classes for enterprise finance density */
 .table-compact th, 
 .table-compact td {
   padding-top: 0.625rem;
