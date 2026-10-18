@@ -1,0 +1,356 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { api, OverviewData, ReconciliationData } from './api/client';
+import { EnrichedInvoice, ExceptionItem, CashForecastScenario, FollowUpDraft, UserProfile } from './types';
+import { Sidebar, NavTab } from './components/Layout/Sidebar';
+import { TopNav } from './components/Layout/TopNav';
+import { ToastContainer, ToastMessage } from './components/Common/Toast';
+import { DetailDrawer } from './components/Common/DetailDrawer';
+import { LoginView } from './components/Auth/LoginView';
+
+// Views
+import { OverviewView } from './components/Views/OverviewView';
+import { ReceivablesView } from './components/Views/ReceivablesView';
+import { ReconciliationView } from './components/Views/ReconciliationView';
+import { DisputesView } from './components/Views/DisputesView';
+import { CollectionWorkspaceView } from './components/Views/CollectionWorkspaceView';
+import { CashFlowView } from './components/Views/CashFlowView';
+import { ScenarioLabView } from './components/Views/ScenarioLabView';
+import { BusinessCaseView } from './components/Views/BusinessCaseView';
+import { ReportsEvidenceView } from './components/Views/ReportsEvidenceView';
+import { SettingsView } from './components/Views/SettingsView';
+
+export function App() {
+  // Authentication State
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
+    try {
+      const savedUser = localStorage.getItem('c28_user_profile');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [authToken, setAuthToken] = useState<string | null>(() => {
+    return localStorage.getItem('c28_auth_token') || null;
+  });
+
+  const [currentTab, setCurrentTab] = useState<NavTab>('overview');
+  const [asOfDate, setAsOfDate] = useState<string>('2026-10-15');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Core Data State
+  const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
+  const [invoices, setInvoices] = useState<EnrichedInvoice[]>([]);
+  const [reconciliationData, setReconciliationData] = useState<ReconciliationData | null>(null);
+  const [exceptions, setExceptions] = useState<ExceptionItem[]>([]);
+  const [cashForecast, setCashForecast] = useState<CashForecastScenario[]>([]);
+  const [savedDrafts, setSavedDrafts] = useState<FollowUpDraft[]>([]);
+
+  // UI State
+  const [selectedInvoice, setSelectedInvoice] = useState<EnrichedInvoice | null>(null);
+  const [composerTargetInvoice, setComposerTargetInvoice] = useState<EnrichedInvoice | null>(null);
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const showToast = useCallback((title: string, message?: string, type: 'success' | 'error' | 'info' = 'info') => {
+    const id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    setToasts((prev) => [...prev, { id, title, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 4500);
+  }, []);
+
+  const dismissToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  // Auth Handlers
+  const handleLoginSuccess = (user: UserProfile, token: string) => {
+    setCurrentUser(user);
+    setAuthToken(token);
+    try {
+      localStorage.setItem('c28_auth_token', token);
+      localStorage.setItem('c28_user_profile', JSON.stringify(user));
+      const demoEmails = ['kavita.nair@apexfmcg.in', 'rajesh.m@apexfmcg.in', 'v.singhania@apexfmcg.in'];
+      if (!demoEmails.includes(user.email)) {
+        localStorage.setItem('c28_custom_user', JSON.stringify(user));
+      }
+    } catch (e) {
+      console.warn('Could not persist session to localStorage', e);
+    }
+    showToast('Authenticated', `Welcome back, ${user.name} (${user.role})`, 'success');
+  };
+
+  const handleLogout = async () => {
+    try {
+      if (authToken) {
+        await api.logout(authToken);
+      }
+    } catch (e) {
+      console.error('Logout error', e);
+    }
+    setCurrentUser(null);
+    setAuthToken(null);
+    try {
+      localStorage.removeItem('c28_auth_token');
+      localStorage.removeItem('c28_user_profile');
+    } catch (e) {
+      console.warn('Could not clear session storage', e);
+    }
+    showToast('Signed Out', 'Your session has been securely ended.', 'info');
+  };
+
+  const handleSwitchPersona = async (email: string) => {
+    try {
+      const res = await api.oauthLogin({ provider: 'google', email });
+      handleLoginSuccess(res.user, res.access_token);
+    } catch (err: any) {
+      showToast('Persona Switch Failed', err.message, 'error');
+    }
+  };
+
+  // Load all data
+  const loadData = useCallback(async () => {
+    try {
+      const [overview, invs, recon, excs, forecast, drafts] = await Promise.all([
+        api.getOverview(),
+        api.getInvoices(),
+        api.getReconciliation(),
+        api.getExceptions(),
+        api.getForecasting(),
+        api.getSavedDrafts(),
+      ]);
+
+      setOverviewData(overview);
+      setAsOfDate(overview.as_of_date);
+      setInvoices(invs);
+      setReconciliationData(recon);
+      setExceptions(excs);
+      setCashForecast(forecast);
+      setSavedDrafts(drafts);
+    } catch (err: any) {
+      console.error('Failed to load data:', err);
+      showToast('Connection Notice', 'Could not reach local FastAPI server on port 8000. Retrying...', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [showToast]);
+
+  useEffect(() => {
+    if (currentUser) {
+      loadData();
+    }
+  }, [currentUser, loadData]);
+
+  // Handle changing As-of date
+  const handleUpdateAsOfDate = async (newDate: string) => {
+    try {
+      await api.setAsOfDate(newDate);
+      setAsOfDate(newDate);
+      showToast('As-Of Date Updated', `Ledger recalculated to ${newDate}. Ageing buckets refreshed.`, 'info');
+      await loadData();
+    } catch (err: any) {
+      showToast('Failed to update date', err.message, 'error');
+    }
+  };
+
+  // Handle System Reset
+  const handleResetData = async () => {
+    try {
+      await api.resetSystem();
+      showToast('System Reset', 'Restored to canonical starter fixture dataset.', 'success');
+      await loadData();
+    } catch (err: any) {
+      showToast('Reset Failed', err.message, 'error');
+    }
+  };
+
+  // Handle draft navigation shortcut
+  const handleDraftFollowUp = (inv: EnrichedInvoice) => {
+    setComposerTargetInvoice(inv);
+    setCurrentTab('collections');
+  };
+
+  const currentTabLabel = {
+    overview: 'Executive Overview',
+    receivables: 'Receivables Register',
+    reconciliation: 'Payment Reconciliation',
+    disputes: 'Disputes & Reviews',
+    collections: 'Collection Workspace',
+    forecasting: 'Cash Flow Forecasting',
+    'scenario-lab': 'What-If Scenario Lab',
+    reports: 'Reports & Evidence',
+    'business-case': 'MBA Business Case',
+    settings: 'Settings & Ingestion',
+  }[currentTab];
+
+  // If user is not authenticated, render 3D Enterprise OAuth Login Portal
+  if (!currentUser) {
+    return (
+      <>
+        <LoginView onLoginSuccess={handleLoginSuccess} />
+        <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+      </>
+    );
+  }
+
+  return (
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans text-slate-900 antialiased">
+      {/* Left Persistent Navigation */}
+      <Sidebar
+        currentTab={currentTab}
+        onSelectTab={setCurrentTab}
+        exceptionCount={exceptions.length}
+        unappliedCount={overviewData?.kpis.unapplied_receipts_count}
+      />
+
+      {/* Main App Workspace */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top Persistent App Bar with User Profile & OAuth Status */}
+        <TopNav
+          company={overviewData?.company || null}
+          asOfDate={asOfDate}
+          onUpdateAsOfDate={handleUpdateAsOfDate}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          exceptionCount={exceptions.length}
+          onResetData={handleResetData}
+          currentTabName={currentTabLabel}
+          currentUser={currentUser}
+          onLogout={handleLogout}
+          onSwitchPersona={handleSwitchPersona}
+        />
+
+        {/* Tab Content Canvas */}
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="max-w-7xl mx-auto">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-24 text-slate-400 space-y-2">
+                <div className="w-6 h-6 border-2 border-teal-600 border-t-transparent rounded-full animate-spin" />
+                <p className="text-xs">Initializing LedgerLoop Receivables Desk...</p>
+              </div>
+            ) : (
+              <>
+                {currentTab === 'overview' && (
+                  <OverviewView
+                    data={overviewData}
+                    onSelectInvoice={setSelectedInvoice}
+                    onNavigateTab={setCurrentTab}
+                    onDraftFollowUp={handleDraftFollowUp}
+                  />
+                )}
+
+                {currentTab === 'receivables' && (
+                  <ReceivablesView
+                    invoices={invoices}
+                    onSelectInvoice={setSelectedInvoice}
+                    onDraftFollowUp={handleDraftFollowUp}
+                    onExportCSV={() => window.open(api.getExportUrl('receivables'), '_blank')}
+                    onCreateInvoice={async (newInv) => {
+                      try {
+                        const res = await api.importRecords({ invoices: [newInv] });
+                        if (res.imported_invoices_count > 0) {
+                          showToast('Invoice Created', `Invoice ${newInv.invoice_id} successfully added to ledger.`, 'success');
+                          await loadData();
+                        } else {
+                          const err = res.errors?.join(', ') || 'Failed to create invoice';
+                          showToast('Validation Failed', err, 'error');
+                        }
+                      } catch (err: any) {
+                        showToast('Error', err.message, 'error');
+                      }
+                    }}
+                  />
+                )}
+
+                {currentTab === 'reconciliation' && (
+                  <ReconciliationView
+                    data={reconciliationData}
+                    invoices={invoices}
+                    onApplyAllocation={async (recId, invId, amt) => {
+                      await api.applyAllocation(recId, invId, amt);
+                      showToast('Payment Allocated', `Applied ₹${amt.toLocaleString()} to ${invId}.`, 'success');
+                      await loadData();
+                    }}
+                    onReverseAllocation={async (allocId) => {
+                      await api.reverseAllocation(allocId);
+                      showToast('Allocation Reversed', `Allocation ${allocId} has been reversed.`, 'info');
+                      await loadData();
+                    }}
+                    onRefresh={loadData}
+                  />
+                )}
+
+                {currentTab === 'disputes' && (
+                  <DisputesView
+                    exceptions={exceptions}
+                    onUpdateDecision={async (invId, status, owner, notes) => {
+                      await api.updateDisputeDecision(invId, status, owner, notes);
+                      showToast('Decision Recorded', `Dispute updated for ${invId}.`, 'success');
+                    }}
+                    onRefresh={loadData}
+                  />
+                )}
+
+                {currentTab === 'collections' && (
+                  <CollectionWorkspaceView
+                    invoices={invoices}
+                    initialInvoice={composerTargetInvoice}
+                    savedDrafts={savedDrafts}
+                    onGenerateDraft={async (invId, sc, tn) => {
+                      const d = await api.createFollowUpDraft({ invoice_id: invId, scenario: sc, tone: tn });
+                      setSavedDrafts((prev) => [...prev, d]);
+                      return d;
+                    }}
+                    onApproveDraft={async (draftId) => {
+                      await api.approveDraft(draftId);
+                    }}
+                    onShowToast={showToast}
+                  />
+                )}
+
+                {currentTab === 'forecasting' && (
+                  <CashFlowView scenarios={cashForecast} />
+                )}
+
+                {currentTab === 'scenario-lab' && (
+                  <ScenarioLabView
+                    asOfDate={asOfDate}
+                    onRunSimulation={(params) => api.runScenarioLab(params)}
+                  />
+                )}
+
+                {currentTab === 'business-case' && (
+                  <BusinessCaseView onCalculate={(params) => api.calculateUnitEconomics(params)} />
+                )}
+
+                {currentTab === 'reports' && (
+                  <ReportsEvidenceView asOfDate={asOfDate} />
+                )}
+
+                {currentTab === 'settings' && (
+                  <SettingsView
+                    company={overviewData?.company || null}
+                    onResetData={handleResetData}
+                    onShowToast={showToast}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        </main>
+      </div>
+
+      {/* Detail Flyout Drawer */}
+      <DetailDrawer
+        invoice={selectedInvoice}
+        onClose={() => setSelectedInvoice(null)}
+        onDraftFollowUp={handleDraftFollowUp}
+      />
+
+      {/* Floating Toast Feedback */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+    </div>
+  );
+}
+
+export default App;

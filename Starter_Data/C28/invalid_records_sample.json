@@ -1,0 +1,51 @@
+{
+  "invoices": [
+    {
+      "invoice_id": "INV-ERR-001",
+      "customer_id": "CUST-NONEXISTENT",
+      "issue_date": "2026-09-01",
+      "due_date": "2026-09-15",
+      "amount": 15000.0,
+      "dispute_status": "none",
+      "notes": "Invalid: customer CUST-NONEXISTENT does not exist"
+    },
+    {
+      "invoice_id": "INV-ERR-002",
+      "customer_id": "CUST-001",
+      "issue_date": "2026-09-01",
+      "due_date": "2026-09-15",
+      "amount": -5000.0,
+      "dispute_status": "none",
+      "notes": "Invalid: negative invoice amount"
+    },
+    {
+      "invoice_id": "INV-ERR-003",
+      "customer_id": "CUST-002",
+      "issue_date": "invalid-date",
+      "due_date": "2026-09-15",
+      "amount": 20000.0,
+      "dispute_status": "none",
+      "notes": "Invalid: malformed issue date"
+    },
+    {
+      "invoice_id": "INV-2026-001",
+      "customer_id": "CUST-003",
+      "issue_date": "2026-09-01",
+      "due_date": "2026-09-16",
+      "amount": 10000.0,
+      "dispute_status": "none",
+      "notes": "Invalid: duplicate invoice ID (already exists in database)"
+    }
+  ],
+  "receipts": [
+    {
+      "receipt_id": "REC-ERR-001",
+      "customer_id": "CUST-001",
+      "receipt_date": "2026-10-10",
+      "amount": -2000.0,
+      "payment_method": "NEFT",
+      "reference_number": "REF-NEG",
+      "remarks": "Invalid: negative receipt amount"
+    }
+  ]
+}

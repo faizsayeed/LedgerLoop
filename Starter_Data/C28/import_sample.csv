@@ -1,0 +1,4 @@
+invoice_id,customer_id,issue_date,due_date,amount,po_reference,notes
+INV-2026-012,CUST-004,2026-09-20,2026-10-20,85000.0,PO-APL-2026-309,Batch delivery antibiotics
+INV-2026-013,CUST-006,2026-09-22,2026-10-22,64000.0,PO-DCC-2026-944,Cold transport dairy stock
+INV-2026-014,CUST-007,2026-09-25,2026-10-25,48000.0,PO-VKM-2026-115,Festive snack packs
