@@ -15,7 +15,25 @@ from ..services.reconciliation import (
     generate_reconciliation_matches, find_duplicate_receipts, validate_and_apply_allocation
 )
 
-DEFAULT_FIXTURE_PATH = Path(__file__).resolve().parent.parent.parent.parent / "Starter_Data" / "C28" / "fixture.json"
+def find_fixture_path() -> Path:
+    env_path = os.environ.get("FIXTURE_PATH")
+    if env_path and Path(env_path).exists():
+        return Path(env_path)
+
+    curr = Path(__file__).resolve()
+    candidates = [
+        curr.parent.parent.parent.parent / "Starter_Data" / "C28" / "fixture.json",
+        curr.parent.parent.parent / "Starter_Data" / "C28" / "fixture.json",
+        curr.parent.parent / "Starter_Data" / "C28" / "fixture.json",
+        Path.cwd() / "Starter_Data" / "C28" / "fixture.json",
+        Path("/var/task/Starter_Data/C28/fixture.json"),
+    ]
+    for c in candidates:
+        if c.exists():
+            return c
+    return candidates[0]
+
+DEFAULT_FIXTURE_PATH = find_fixture_path()
 
 class ARRepository:
     def __init__(self, fixture_path: Optional[Path] = None):

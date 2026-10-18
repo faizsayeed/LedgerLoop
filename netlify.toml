@@ -1,0 +1,26 @@
+[build]
+  base = ""
+  command = "cd frontend && npm install && npm run build"
+  publish = "frontend/dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  PYTHON_VERSION = "3.10"
+  NODE_VERSION = "18"
+
+[functions]
+  directory = "netlify/functions"
+  included_files = ["Starter_Data/**", "backend/**"]
+
+# API Proxy: Route all /api/* requests to the serverless Python function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# SPA Fallback: Route all client-side navigation to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

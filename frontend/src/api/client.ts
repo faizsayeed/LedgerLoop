@@ -5,7 +5,10 @@ import {
   CompanyInfo, AuditLogEntry, UserProfile, LoginRequest, RegisterRequest, OAuthLoginRequest, AuthResponse
 } from '../types';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = (
+  (import.meta as any).env?.VITE_API_URL ||
+  ((import.meta as any).env?.DEV ? 'http://localhost:8000/api' : '/api')
+).replace(/\/+$/, '');
 
 export interface OverviewData {
   company: CompanyInfo;
