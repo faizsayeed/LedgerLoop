@@ -1,2 +1,2 @@
-/api/*  /.netlify/functions/api/:splat  200!
-/*      /index.html                     200
+/api/*  https://ledgerloop-api-9jee.onrender.com/api/:splat  200!
+/*      /index.html                                          200

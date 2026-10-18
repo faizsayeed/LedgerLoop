@@ -12,10 +12,10 @@
   directory = "netlify/functions"
   included_files = ["Starter_Data/**", "backend/**"]
 
-# API Proxy: Route all /api/* requests to the serverless Python function
+# API Proxy: Route all /api/* requests to the live Render backend
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
+  to = "https://ledgerloop-api-9jee.onrender.com/api/:splat"
   status = 200
   force = true
 
